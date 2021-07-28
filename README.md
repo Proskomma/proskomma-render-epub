@@ -2,7 +2,8 @@
 Scripture ePub generator based on proskomma-render
 
 ## Example Sources
-`unfoldingWord Literal Translation <https://www.unfoldingword.org/ult>`_ (Psalms and Gospels)
+
+[unfoldingWord Literal Text](https://www.unfoldingword.org/ult) (Psalms and Gospels)
 
 ## To set up
 
