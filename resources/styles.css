@@ -1,0 +1,94 @@
+h1, h2 {margin-top: 0.5ex; margin-bottom: 0.2ex; text-align: left; font-weight: normal}
+h1 {font-size: xx-large}
+h2 {font-size: x-large}
+h3 {font-size: large; font-weight: bold; margin-top: 1.5ex; margin-bottom: 0.5ex}
+h4 {font-size: medium; font-weight: bold; font-style: italic; margin-top: 1.5ex; margin-bottom: 0.5ex}
+sup {font-size: small}
+hr {margin-top: 2ex}
+
+.titlePage, .titlePage h1, .titlePage h2, .titlePage div img {text-align: center}
+nav ol li {list-style-type: none; margin-bottom: 1ex}
+nav ol li a {text-decoration: none}
+
+.toc_periph {font-style: italic}
+.toc_level1 {font-size: x-large}
+.toc_level2 {font-size: large}
+.toc_level3 {font-size: medium}
+
+.d {font-style: italic}
+.mt, .mt2, .mt3, .imt, .imt2, .imt3 {margin-bottom: 1ex}
+.mt, .mt2, .mt3 {text-align: center}
+.mt, .imt {font-weight: bold}
+.ms, .ms2, .ms3 {}
+.r {font-weight: normal; font-style: italic; margin-top: 0}
+.is, .s {}
+.is2, .s2 {}
+
+.li, .ili, .ip, .m, .p, .q, .q2, .q3, .q4 {margin-bottom: 0.4em; margin-top: 0.4em}
+.li, .ili {padding-left: 1.5em}
+.li2, .ili2 {padding-left: 2.5em}
+.li3, .ili3 {padding-left: 3.5em}
+.ip {font-family: sans-serif}
+.q, .q1, .pi {padding-left: 1.5em}
+.q2 {padding-left: 2.5em}
+.q3 {padding-left: 3.5em}
+.q4 {padding-left: 4.5em}
+
+.tr {
+    padding-left: 3em;
+    text-indent: -3em;
+    padding-bottom: 1ex;
+}
+
+.cellLeft, .cellRight, .cellHeadingLeft, .cellHeadingRight {
+    padding-right: 0.25em;
+}
+
+.cellLeft {
+}
+
+.cellRight {
+}
+.cellHeadingLeft {
+    font-weight: bold;
+}
+
+.cellHeadingRight {
+    font-weight: bold;
+}
+
+.bd {font-weight: bold}
+.bk {font-style: italic}
+.dc {}
+.em {font-style: italic}
+.fq {font-style: italic}
+.fqa {font-style: italic}
+.fr {font-weight: bold; font-size: small}
+.ft {}
+.fv {}
+.it {font-style: italic}
+.k {font-weight: bold; font-style: italic}
+.ord {font-size: small; vertical-align: top}
+.pn {}
+.qs {font-style: italic; float: right; padding-left: 1em}
+.sls {font-style: italic}
+.tl {font-style: italic}
+.wj {color: #600}
+.xt {font-weight: bold}
+.sc {}
+.qt {font-style: italic}
+
+.chapter_nav {margin-top: 0.5ex; margin-bottom: 2ex; text-align: center}
+.chapter_link {
+    line-height: 2ex;
+    font-weight: bold;
+}
+.chapter_link a {text-decoration: none}
+.chapter {padding-right: 0.25em; float: left; vertical-align: top; margin-top:0}
+.chapter a {text-decoration: none; font-size: 200%}
+.verses {font-size: small; font-weight: bold}
+a.glossaryLink {text-decoration: none}
+a.footnote_anchor {text-decoration: none}
+a.footnote_number {font-size: large; text-decoration: none}
+
+* {font-size: medium; font-family: serif}
