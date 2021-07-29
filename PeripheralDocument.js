@@ -11,19 +11,6 @@ class PeripheralDocument extends ScriptureParaDocument {
         this.footnotes = {};
         this.nextFootnote = 1;
         this.glossaryLemma = null;
-        this.chapter = {
-            waiting: false,
-            c: null,
-            cp: null,
-            ca: null,
-            cc: 0
-        };
-        this.verses = {
-            waiting: false,
-            v: null,
-            vp: null,
-            va: null
-        };
         addActions(this);
     }
 
@@ -31,26 +18,6 @@ class PeripheralDocument extends ScriptureParaDocument {
         this.applyClassActions(this.allActions.startItems, items);
     };
 
-    maybeRenderChapter() {
-        if (this.chapter.waiting) {
-            const chapterLabel = this.chapter.cp || this.chapter.c;
-            let chapterId = this.chapter.c;
-            if (this.chapter.cpc > 0) {
-                chapterId = `${chapterId}_${this.chapter.cpc}`;
-            }
-            this.context.document.chapters.push([chapterId, chapterLabel]);
-            this.body.push(`<h3 id="chapter_${chapterId}" class="chapter"><a href="#top">${chapterLabel}</a></h3>\n`);
-            this.chapter.waiting = false;
-        }
-    }
-
-    maybeRenderVerse() {
-        if (this.verses.waiting) {
-            const verseLabel = this.verses.vp || this.verses.v;
-            this.appendToTopStackRow(`<span class="verses">${verseLabel}</span>&#160;`);
-            this.verses.waiting = false;
-        }
-    }
 }
 
 const addActions = (dInstance) => {
@@ -76,18 +43,6 @@ const addActions = (dInstance) => {
                 periphTitle,
                 periphTitle,
             ];
-            dInstance.chapter = {
-                waiting: false,
-                c: null,
-                cp: null,
-                cc: 0
-            };
-            dInstance.verses = {
-                waiting: false,
-                v: null,
-                vp: null,
-                vc: 0
-            };
             dInstance.context.document.chapters = [];
         }
     );
@@ -153,54 +108,6 @@ const addActions = (dInstance) => {
             renderer.popStackRow();
         },
     );
-    // Chapter: maintain state variables, store for rendering by maybeRenderChapter()
-    dInstance.addAction(
-        'scope',
-        (context, data) => data.subType === 'start' && data.payload.startsWith("chapter/"),
-        (renderer, context, data) => {
-            dInstance.chapter.waiting = true;
-            const chapterLabel = data.payload.split("/")[1];
-            dInstance.chapter.c = chapterLabel;
-            dInstance.chapter.cp = null;
-            dInstance.chapter.cpc = 0;
-            dInstance.chapter.ca = null;
-            dInstance.chapter.cc++
-        },
-    );
-    // pubChapter: maintain state variables, store for rendering by maybeRenderChapter()
-    dInstance.addAction(
-        'scope',
-        (context, data) => data.subType === "start" && data.payload.startsWith("pubChapter/"),
-        (renderer, context, data) => {
-            dInstance.chapter.waiting = true;
-            const chapterLabel = data.payload.split("/")[1];
-            dInstance.chapter.cp = chapterLabel;
-            dInstance.chapter.cpc++;
-        }
-    );
-    // Verses: maintain state variables, store for rendering by maybeRenderVerse()
-    dInstance.addAction(
-        'scope',
-        (context, data) => data.subType === 'start' && data.payload.startsWith("verses/"),
-        (renderer, context, data) => {
-            dInstance.verses.waiting = true;
-            const verseLabel = data.payload.split("/")[1];
-            dInstance.verses.v = verseLabel;
-            dInstance.verses.vp = null;
-            dInstance.verses.vc++;
-        },
-    );
-    // pubVerse: maintain state variables, store for rendering by maybeRenderVerse()
-    dInstance.addAction(
-        'scope',
-        (context, data) => data.subType === 'start' && data.payload.startsWith("pubVerse/"),
-        (renderer, context, data) => {
-            dInstance.verses.waiting = true;
-            const verseLabel = data.payload.split("/")[1];
-            dInstance.verses.vp = verseLabel;
-            dInstance.verses.vc++;
-        }
-    );
     // A glossary word lemma: store the lemma for later
     dInstance.addAction(
         'scope',
@@ -244,10 +151,6 @@ const addActions = (dInstance) => {
             if (["lineSpace", "eol"].includes(data.subType)) {
                 tokenString = " ";
             } else {
-                if (context.sequenceStack[0].type === "main") {
-                    dInstance.maybeRenderChapter();
-                    dInstance.maybeRenderVerse();
-                }
                 if ([";", "!", "?"].includes(data.payload)) {
                     if (renderer.topStackRow().length > 0) {
                         let lastPushed = renderer.topStackRow().pop();
@@ -268,7 +171,7 @@ const addActions = (dInstance) => {
             }
             return renderer.appendToTopStackRow(tokenString);
         }
-    ),
+    );
         // Add footnote link, then process the footnote sequence
         dInstance.addAction(
             'inlineGraft',
@@ -284,8 +187,6 @@ const addActions = (dInstance) => {
         'endSequence',
         context => context.sequenceStack[0].type === "main",
         (renderer, context) => {
-            let chapterLinks = "<span class=\"chapter_link\"><a href=\"../../toc.xhtml\">^</a></span>";
-            chapterLinks += context.document.chapters.map(c => ` <span class="chapter_link"><a href="#chapter_${c[0]}">${c[1]}</a></span>`).join("");
             let bodyHead = renderer.bodyHead.join("");
             renderer.docSetModel.zip
                 .file(
@@ -293,36 +194,17 @@ const addActions = (dInstance) => {
                     [
                         `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">\n<head>\n${renderer.head.join("")}\n</head>\n`,
                         '<body id="top">\n',
-                        context.document.chapters.length > 0 ? `<div class="chapter_nav">${chapterLinks}</div>\n` : "",
                         `<header>\n${bodyHead}\n</header>\n`,
                         `<section epub:type="bodymatter">\n`,
                         renderer.body.join(""),
                         `\n</section>\n`,
-                        /*
-                        Object.keys(renderer.footnotes).length > 0 ?
-                            `<section epub:type="footnotes">\n<h2 class="notes_title">${renderer.config.i18n.notes}</h2>\n` :
-                            "",
-                         */
                         Object.entries(renderer.footnotes)
                             .map(fe =>
                                 `<aside epub:type="footnote" id="footnote_${fe[0]}" class="footnote_number"><p>${fe[1].join("")}</p></aside>\n`)
                             .join(""),
-                        /*
-                        Object.keys(renderer.footnotes).length > 0 ?
-                            `</section>\n` :
-                            "",
-                         */
                         '</body>\n</html>\n'
                     ].join("")
                 );
-        }
-    );
-    // Add hr to separate introduction from main content
-    dInstance.addAction(
-        'endSequence',
-        context => context.sequenceStack[0].type === "introduction",
-        renderer => {
-            renderer.body.push("<hr/>\n");
         }
     );
 };
