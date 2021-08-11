@@ -120,6 +120,7 @@ const addActions = (dsInstance) => {
             title = title.replace(/%copyright%/g, renderer.config.i18n.copyright);
             title = title.replace(/%coverAlt%/g, renderer.config.i18n.coverAlt);
             title = title.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);
+            title = title.replace(/%pubIds%/g, renderer.config.pubIds.map(p => '<p>' + p + '</p>\n').join(""));
             renderer.zip.file("OEBPS/XHTML/title.xhtml", title);
             let toc = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/toc.xhtml'), 'utf8');
             toc = toc.replace(/%contentLinks%/g, nestedToc(renderer.config.structure));

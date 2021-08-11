@@ -4,6 +4,10 @@
   "coverImage": "../../../../sbf/nfc/cover_ecu.png",
   "language": "fr",
   "uid": "NFC18",
+  "pubIds": [
+    "ISBN 123",
+    "NUB 456"
+  ],
   "bookSources": [
     "GEN",
     "EXO",
@@ -94,6 +98,10 @@
     ],
     [
       "periph",
+      "x-collab"
+    ],
+    [
+      "periph",
       "foreword"
     ],
     [
@@ -107,10 +115,6 @@
     [
       "periph",
       "intbible"
-    ],
-    [
-      "periph",
-      "x-intcanon"
     ],
     [
       "section",
@@ -479,6 +483,10 @@
     [
       "bookCode",
       "GLO"
+    ],
+    [
+      "periph",
+      "x-intcanon"
     ]
   ],
   "i18n": {
@@ -488,11 +496,11 @@
     "copyright": "© Société biblique française – Bibli'0, 2019",
     "coverAlt": "Couverture",
     "glossary": "Vocabulaire",
-    "ot": "Ancien Testament",
+    "ot": "ANCIEN TESTAMENT",
     "pentateuch": "Pentateuque",
     "history": "Livres historiques",
     "poetry": "Livres poétiques et sapientiaux",
     "prophesy": "Livres prophétiques",
-    "nt": "Nouveau Testament"
+    "nt": "NOUVEAU TESTAMENT"
   }
 }

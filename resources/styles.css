@@ -26,8 +26,8 @@ nav ol li a {text-decoration: none}
 
 .li, .ili, .ip, .m, .p, .q, .q2, .q3, .q4 {margin-bottom: 0.4em; margin-top: 0.4em}
 .li, .ili {padding-left: 1.5em}
-.li2, .ili2 {padding-left: 2.5em}
-.li3, .ili3 {padding-left: 3.5em}
+.li2, .ili2 {padding-left: 3em}
+.li3, .ili3 {padding-left: 4.5em}
 .ip {font-family: sans-serif}
 .q, .q1, .pi {padding-left: 1.5em}
 .q2 {padding-left: 2.5em}
