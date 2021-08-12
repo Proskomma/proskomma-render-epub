@@ -8,6 +8,7 @@
     "ISBN 123",
     "NUB 456"
   ],
+  "frenchSpacing": "add",
   "bookSources": [
     "GEN",
     "EXO",
@@ -88,8 +89,8 @@
     "GLO"
   ],
   "peripheralSources": [
-    "FRT",
-    "INT"
+    "FRT_ECU",
+    "INT_ECU"
   ],
   "structure": [
     [

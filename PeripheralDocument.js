@@ -151,27 +151,39 @@ const addActions = (dInstance) => {
             if (["lineSpace", "eol"].includes(data.subType)) {
                 tokenString = " ";
             } else {
-                if ([";", "!", "?"].includes(data.payload)) {
-                    if (renderer.topStackRow().length > 0) {
-                        let lastPushed = renderer.topStackRow().pop();
-                        lastPushed = lastPushed.replace(/ $/, "&#8239;");
-                        renderer.appendToTopStackRow(lastPushed);
+                if (renderer.config.frenchSpacing === 'change') {
+                    if ([";", "!", "?"].includes(data.payload)) {
+                        if (renderer.topStackRow().length > 0) {
+                            let lastPushed = renderer.topStackRow().pop();
+                            lastPushed = lastPushed.replace(/ $/, "&#8239;");
+                            renderer.appendToTopStackRow(lastPushed);
+                        }
+                        tokenString = data.payload;
+                    } else if ([":", "»"].includes(data.payload)) {
+                        if (renderer.topStackRow().length > 0) {
+                            let lastPushed = renderer.topStackRow().pop();
+                            lastPushed = lastPushed.replace(/ $/, "&#160;");
+                            renderer.appendToTopStackRow(lastPushed);
+                        }
+                        tokenString = data.payload;
                     }
-                    tokenString = data.payload;
-                } else if ([":", "»"].includes(data.payload)) {
-                    if (renderer.topStackRow().length > 0) {
-                        let lastPushed = renderer.topStackRow().pop();
-                        lastPushed = lastPushed.replace(/ $/, "&#160;");
-                        renderer.appendToTopStackRow(lastPushed);
+                } else if (renderer.config.frenchSpacing === 'add') {
+                    if ([";", "!", "?"].includes(data.payload)) {
+                        tokenString = "&#8239;" + data.payload;
+                    } else if ([":", "»"].includes(data.payload)) {
+                        tokenString = "&#160;" + data.payload;
+                    } else if (data.payload === '«') {
+                        tokenString = data.payload + "&#160;";
+                    } else {
+                        tokenString = data.payload;
                     }
-                    tokenString = data.payload;
                 } else {
                     tokenString = data.payload.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 }
             }
             return renderer.appendToTopStackRow(tokenString);
         }
-    );
+    ),
         // Add footnote link, then process the footnote sequence
         dInstance.addAction(
             'inlineGraft',
