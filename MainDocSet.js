@@ -2,7 +2,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const JSZip = require('jszip');
 
-const { ScriptureDocSet } = require('proskomma-render');
+const {ScriptureDocSet} = require('proskomma-render');
 const MainEpubDocument = require('./CanonicalDocument');
 const GlossaryEpubDocument = require('./GlossaryDocument');
 const PeripheralEpubDocument = require('./PeripheralDocument');
@@ -29,7 +29,7 @@ class MainDocSet extends ScriptureDocSet {
     }
 
     renderDocument(document, renderSpec) {
-        if (document.headers.filter(h => h.key === 'bookCode' &&  this.usedDocuments.includes(h.value)).length === 1) {
+        if (document.headers.filter(h => h.key === 'bookCode' && this.usedDocuments.includes(h.value)).length === 1) {
             super.renderDocument(document, renderSpec);
         }
     }
@@ -51,8 +51,7 @@ const addActions = (dsInstance) => {
                 for (const e of a) {
                     if (e[0] === 'section') {
                         ret = [...ret, ...flattenedStructure(e[2])];
-                    }
-                     else {
+                    } else {
                         ret.push(e);
                     }
                 }
@@ -64,7 +63,44 @@ const addActions = (dsInstance) => {
             renderer.zip = new JSZip();
             renderer.zip.file("mimetype", "application/epub+zip");
             renderer.zip.file("META-INF/container.xml", fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/container.xml')));
-            renderer.zip.file("OEBPS/CSS/styles.css", fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/styles.css')));
+            renderer.config.fontManifestEntries = [];
+            const fontFaces = [];
+            if (dsInstance.config.fonts) {
+                const fontMimeType = {
+                    'otf': 'application/vnd.ms-opentype',
+                    'woff': 'application/font-woff',
+                    'woff2': 'font/woff2',
+                }
+                for (const embeddedType of ['body', 'heading']) {
+                    if (embeddedType in dsInstance.config.fonts) {
+                        const fontDefs = dsInstance.config.fonts[embeddedType];
+                        for (const fontVariant of ['regular', 'bold', 'italic', 'boldItalic']) {
+                            if (fontVariant in fontDefs) {
+                                const fontPath = `FONTS/${fontDefs[fontVariant].name}_${fontVariant}.${fontDefs[fontVariant].format}`;
+                                renderer.zip.file(
+                                    `OEBPS/${fontPath}`,
+                                    fse.readFileSync(path.resolve(dsInstance.config.configRoot, fontDefs[fontVariant].path)));
+                                renderer.config.fontManifestEntries.push(
+                                    `<item id="font_${fontDefs[fontVariant].name}_${fontVariant}_${fontDefs[fontVariant].format}" href="${fontPath}" media-type="${fontMimeType[fontDefs[fontVariant].format]}" />
+                                    `);
+                                fontFaces.push(`@font-face {
+                                    font-family: '${embeddedType === 'heading' ? 'embeddedHeading' : 'embedded'}';
+                                    font-weight: ${fontVariant.includes('bold') ? 'bold' : 'normal'};
+                                    font-style: ${fontVariant.includes('talic') ? 'italic' : 'normal'};
+                                    src:url(../${fontPath}) format('${fontDefs[fontVariant].format}');
+                                }\n`)
+                            }
+                        }
+                    }
+                }
+            }
+            let stylesTemplate = fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/styles.css'));
+            if (fontFaces.length > 0) {
+                stylesTemplate = `${fontFaces.join('')}${stylesTemplate}`;
+            }
+            stylesTemplate = stylesTemplate.replace(/%left%/g, renderer.config.textDirection === 'rtl' ? 'right' : 'left');
+            stylesTemplate = stylesTemplate.replace(/%right%/g, renderer.config.textDirection === 'rtl' ? 'left' : 'right');
+            renderer.zip.file("OEBPS/CSS/styles.css", stylesTemplate);
             const coverImagePath = dsInstance.config.coverImage ?
                 path.resolve(dsInstance.config.configRoot, dsInstance.config.coverImage) :
                 path.resolve(dsInstance.config.codeRoot, 'resources/cover.png');
@@ -114,9 +150,12 @@ const addActions = (dsInstance) => {
                 spineContent = spineContent.concat(`<itemref idref="body_glossary_notes" linear="no" />\n`);
             }
             opf = opf.replace(/%spine%/g, spineContent);
-            let manifestContent = renderer.usedDocuments
-                .filter(d => d !== 'GLO')
-                .map(b => `<item id="body_${b}" href="XHTML/${b}/${b}.xhtml" media-type="application/xhtml+xml" />`).join("");
+            let manifestContent = [
+                ...renderer.usedDocuments
+                    .filter(d => d !== 'GLO')
+                    .map(b => `<item id="body_${b}" href="XHTML/${b}/${b}.xhtml" media-type="application/xhtml+xml" />`),
+                ...renderer.config.fontManifestEntries
+            ].join("");
             if (renderer.config.bookSources.includes("GLO")) {
                 manifestContent = manifestContent.concat(`<item id="body_GLO" href="XHTML/GLO.xhtml" media-type="application/xhtml+xml" />`);
                 manifestContent = manifestContent.concat(`<item id="body_glossary_notes" href="XHTML/glossary_notes.xhtml" media-type="application/xhtml+xml" />`);
@@ -128,7 +167,7 @@ const addActions = (dsInstance) => {
             title = title.replace(/%copyright%/g, renderer.config.i18n.copyright);
             title = title.replace(/%coverAlt%/g, renderer.config.i18n.coverAlt);
             title = title.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);
-            title = title.replace(/%pubIds%/g, renderer.config.pubIds.map(p => '<p>' + p + '</p>\n').join(""));
+            title = title.replace(/%pubIds%/g, renderer.config.pubIds ? renderer.config.pubIds.map(p => '<p>' + p + '</p>\n').join("") : '');
             renderer.zip.file("OEBPS/XHTML/title.xhtml", title);
             let toc = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/toc.xhtml'), 'utf8');
             toc = toc.replace(/%contentLinks%/g, nestedToc(renderer.config.structure));

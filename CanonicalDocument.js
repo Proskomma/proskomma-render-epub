@@ -305,7 +305,7 @@ const addActions = (dInstance) => {
                 .file(
                     `OEBPS/XHTML/${context.document.headers.bookCode}/${context.document.headers.bookCode}.xhtml`,
                     [
-                        `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">\n<head>\n${renderer.head.join("")}\n</head>\n`,
+                        `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" dir="${renderer.config.textDirection}">\n<head>\n${renderer.head.join("")}\n</head>\n`,
                         '<body id="top">\n',
                         context.document.chapters.length > 0 ? `<div class="chapter_nav">${chapterLinks}</div>\n` : "",
                         `<header>\n${bodyHead}\n</header>\n`,
