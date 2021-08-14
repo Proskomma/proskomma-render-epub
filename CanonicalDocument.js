@@ -35,7 +35,8 @@ class CanonicalDocument extends ScriptureParaDocument {
                 chapterId = `${chapterId}_${this.chapter.cpc}`;
             }
             this.context.document.chapters.push([chapterId, chapterLabel]);
-            this.body.push(`<h3 id="chapter_${chapterId}" class="chapter"><a href="#top">${chapterLabel}</a></h3>\n`);
+            const chapterFloat = this.chapter.ca ? `${chapterLabel}<br/><span class="altChapter">(${this.chapter.ca})</span>` : chapterLabel;
+            this.body.push(`<h3 id="chapter_${chapterId}" class="chapter"><a href="#top">${chapterFloat}</a></h3>\n`);
             this.chapter.waiting = false;
         }
     }
@@ -75,6 +76,7 @@ const addActions = (dInstance) => {
                 waiting: false,
                 c: null,
                 cp: null,
+                ca: null,
                 cc: 0
             };
             dInstance.verses = {
@@ -204,6 +206,13 @@ const addActions = (dInstance) => {
             renderer.glossaryLemma = data.payload.split("/")[5];
         }
     );
+    // ca scope - add to chapter object
+    dInstance.addAction(
+        'scope',
+        (context, data) => data.payload.startsWith("altChapter") && data.subType === 'start',
+        (renderer, context, data) => {
+            renderer.chapter.ca = data.payload.split('/')[1];
+        });
     // Character markup - open or close an element
     dInstance.addAction(...sharedActions.characterScope);
     // A glossary word: use glossaryLemma to catch lemma after start with a separate action, then use value to produce glossary link

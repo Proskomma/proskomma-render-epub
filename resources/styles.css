@@ -10,6 +10,8 @@ hr {margin-top: 2ex}
 nav ol li {list-style-type: none; margin-bottom: 1ex}
 nav ol li a {text-decoration: none}
 
+.altChapter {font-size: large; font-style: italic; font-weight: normal}
+
 .toc_periph {font-style: italic}
 .toc_level1 {font-size: x-large}
 .toc_level2 {font-size: large}
