@@ -97,6 +97,7 @@ const addActions = (dsInstance) => {
             let opf = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/content.opf'), 'utf8');
             opf = opf.replace(/%title%/g, renderer.config.title);
             opf = opf.replace(/%uid%/g, renderer.config.uid);
+            opf = opf.replace(/%creator%/g, renderer.config.creator || 'proskomma-render-epub');
             opf = opf.replace(/%language%/g, renderer.config.language);
             opf = opf.replace(/%timestamp%/g, new Date().toISOString().replace(/\.\d+Z/g, "Z"));
             opf = opf.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);

@@ -3,7 +3,8 @@
   "title": "La Bible Nouvelle Français courant",
   "coverImage": "../../../../sbf/nfc/cover_ecu.png",
   "language": "fr",
-  "uid": "NFC18",
+  "uid": "NFC18 NUB0017",
+  "creator": "Bibli'O",
   "pubIds": [
     "ISBN 978-2-85300-849-5",
     "NUB0017 avec DC"
@@ -494,7 +495,7 @@
     "notes": "Notes de pied de page",
     "tocBooks": "Table des matières",
     "titlePage": "La Bible Nouvelle Français courant",
-    "copyright": "© Société biblique française – Bibli'0, 2019",
+    "copyright": "© Société biblique française – Bibli'O, 2019",
     "coverAlt": "Couverture",
     "glossary": "Vocabulaire",
     "ot": "ANCIEN TESTAMENT",

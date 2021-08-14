@@ -2,7 +2,7 @@
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" xml:lang = "%language%" dir="ltr" unique-identifier="uid">
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
         <dc:title id="title">%title%</dc:title>
-        <dc:creator>Proskomma ePub Generator</dc:creator>
+        <dc:creator>%creator%</dc:creator>
         <dc:identifier id="uid">%uid%</dc:identifier>
         <dc:language>%language%</dc:language>
         <meta property="dcterms:modified">%timestamp%</meta>
