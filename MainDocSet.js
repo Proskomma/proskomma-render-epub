@@ -96,6 +96,13 @@ const addActions = (dsInstance) => {
             }
             let opf = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/content.opf'), 'utf8');
             opf = opf.replace(/%title%/g, renderer.config.title);
+            if ("isbn" in renderer.config) {
+                opf = opf.replace(/%uid_or_isbn%/g, 'isbn');
+                opf = opf.replace(/%uid_or_isbn_value%/g, `isbn:urn:${renderer.config.isbn}`);
+            } else {
+                opf = opf.replace(/%uid_or_isbn%/g, 'uid');
+                opf = opf.replace(/%uid_or_isbn_value%/g, renderer.config.uid);
+            }
             opf = opf.replace(/%uid%/g, renderer.config.uid);
             opf = opf.replace(/%creator%/g, renderer.config.creator || 'proskomma-render-epub');
             opf = opf.replace(/%language%/g, renderer.config.language);
