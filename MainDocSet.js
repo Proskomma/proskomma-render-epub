@@ -67,6 +67,7 @@ const addActions = (dsInstance) => {
             const fontFaces = [];
             if (dsInstance.config.fonts) {
                 const fontMimeType = {
+                    'ttf': 'application/x-font-truetype',
                     'otf': 'application/vnd.ms-opentype',
                     'woff': 'application/font-woff',
                     'woff2': 'font/woff2',
@@ -94,7 +95,7 @@ const addActions = (dsInstance) => {
                     }
                 }
             }
-            let stylesTemplate = fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/styles.css'));
+            let stylesTemplate = fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/styles.css'), 'utf8');
             if (fontFaces.length > 0) {
                 stylesTemplate = `${fontFaces.join('')}${stylesTemplate}`;
             }

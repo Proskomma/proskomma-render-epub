@@ -6,13 +6,13 @@
   "uid": "UHB",
   "fonts": {
     "body": {
-    "regular": {
-      "name": "SILEOT",
-      "format": "otf",
-      "path": "../../proskomma-fonts/sil/EzraSIL2.51/SILEOT.otf"
+      "regular": {
+        "name": "SILEOT",
+        "format": "woff2",
+        "path": "../../proskomma-fonts/sil/EzraSIL2.51/SILEOTSR.woff2"
+      }
     }
-  }
-},
+  },
   "bookSources": [
     "GEN",
     "EXO",

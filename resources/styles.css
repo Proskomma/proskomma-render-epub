@@ -1,31 +1,31 @@
 h1, h2 {margin-top: 0.5ex; margin-bottom: 0.2ex; text-align: left; font-weight: normal}
-h1 {font-family: 'embeddedHeading', serif; font-size: xx-large}
-h2 {font-family: 'embeddedHeading', serif; font-size: x-large}
-h3 {font-family: 'embeddedHeading', serif; font-size: large; font-weight: bold; margin-top: 1.5ex; margin-bottom: 0.5ex}
-h4 {font-family: 'embeddedHeading', serif; font-size: medium; font-weight: bold; font-style: italic; margin-top: 1.5ex; margin-bottom: 0.5ex}
+h1 {font-family: "embeddedHeading", sans-serif; font-size: xx-large}
+h2 {font-family: "embeddedHeading", sans-serif; font-size: x-large}
+h3 {font-family: "embeddedHeading", sans-serif; font-size: large; font-weight: bold; margin-top: 1.5ex; margin-bottom: 0.5ex}
+h4 {font-family: "embeddedHeading", sans-serif; font-size: medium; font-weight: bold; font-style: italic; margin-top: 1.5ex; margin-bottom: 0.5ex}
 sup {font-size: small}
 hr {margin-top: 2ex}
 
-nav, .titlePage {font-family: 'embeddedHeading', serif;}
+nav, .titlePage {font-family: "embeddedHeading", sans-serif;}
 .titlePage, .titlePage h1, .titlePage h2, .titlePage div img {text-align: center}
 nav ol li {list-style-type: none; margin-bottom: 1ex}
 nav ol li a {text-decoration: none}
 
-.altChapter {font-family: 'embeddedHeading', serif; font-size: large; font-style: italic; font-weight: normal}
+.altChapter {font-family: "embeddedHeading", sans-serif; font-size: large; font-style: italic; font-weight: normal}
 
-.toc_periph {font-family: 'embeddedHeading', serif; font-style: italic}
-.toc_level1 {font-family: 'embeddedHeading', serif; font-size: x-large}
-.toc_level2 {font-family: 'embeddedHeading', serif; font-size: large}
-.toc_level3 {font-family: 'embeddedHeading', serif; font-size: medium}
+.toc_periph {font-family: "embeddedHeading", sans-serif; font-style: italic}
+.toc_level1 {font-family: "embeddedHeading", sans-serif; font-size: x-large}
+.toc_level2 {font-family: "embeddedHeading", sans-serif; font-size: large}
+.toc_level3 {font-family: "embeddedHeading", sans-serif; font-size: medium}
 
 .d {font-style: italic}
-.mt, .mt2, .mt3, .imt, .imt2, .imt3 {font-family: 'embeddedHeading', serif; margin-bottom: 1ex}
-.mt, .mt2, .mt3 {font-family: 'embeddedHeading', serif; text-align: center}
-.mt, .imt {font-family: 'embeddedHeading', serif; font-weight: bold}
-.ms, .ms2, .ms3 {font-family: 'embeddedHeading', serif; }
+.mt, .mt2, .mt3, .imt, .imt2, .imt3 {font-family: "embeddedHeading", sans-serif; margin-bottom: 1ex}
+.mt, .mt2, .mt3 {font-family: "embeddedHeading", sans-serif; text-align: center}
+.mt, .imt {font-family: "embeddedHeading", sans-serif; font-weight: bold}
+.ms, .ms2, .ms3 {font-family: "embeddedHeading", sans-serif; }
 .r {font-weight: normal; font-style: italic; margin-top: 0}
-.is, .s {font-family: 'embeddedHeading', serif; }
-.is2, .s2 {font-family: 'embeddedHeading', serif; }
+.is, .s {font-family: "embeddedHeading", sans-serif; }
+.is2, .s2 {font-family: "embeddedHeading", sans-serif; }
 
 .li, .ili, .ip, .m, .p, .q, .q2, .q3, .q4 {margin-bottom: 0.4em; margin-top: 0.4em}
 .li, .ili {padding-left: 1.5em}
@@ -94,5 +94,5 @@ a.glossaryLink {text-decoration: none}
 a.footnote_anchor {text-decoration: none}
 a.footnote_number {font-size: large; text-decoration: none}
 
-body {font-size: medium; font-family: 'embedded', serif}
-* {font-size: medium; font-family: 'embedded', serif}
+body {font-size: medium; font-family: "embedded", serif}
+* {font-size: medium; font-family: "embedded", serif}
