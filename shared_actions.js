@@ -2,7 +2,7 @@ const sharedActions = {
     // Character markup - open or close an element
     characterScope: [
         'scope',
-        (context, data) => data.payload.startsWith("span") && ["add", "bd", "bk", "dc", "em", "fdc", "ft", "fq", "fqa", "fr", "fv", "it", "k", "ord", "pn", "qs", "sc", "qt", "sls", "tl", "wj", "xt"].includes(data.payload.split("/")[1]),
+        (context, data) => data.payload.startsWith("span") && ["add", "bd", "bk", "dc", "em", "fdc", "ft", "fq", "fqa", "fr", "fv", "it", "k", "nd", "ord", "pn", "qac", "qs", "sc", "qt", "sls", "tl", "wj", "xt"].includes(data.payload.split("/")[1]),
         (renderer, context, data) => {
             if (data.subType === "start") {
                 renderer.pushStackRow();

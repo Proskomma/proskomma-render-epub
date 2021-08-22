@@ -71,8 +71,10 @@ nav ol li a {text-decoration: none}
 .fv {}
 .it {font-style: italic}
 .k {font-weight: bold; font-style: italic}
+.nd {font-weight: bold}
 .ord {font-size: small; vertical-align: top}
 .pn {}
+.qac {font-style: italic; font-weight: bold}
 .qs {font-style: italic; float: %right%; padding-left: 1em}
 .sls {font-style: italic}
 .tl {font-style: italic}
