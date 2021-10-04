@@ -8,6 +8,7 @@ hr {margin-top: 2ex}
 
 nav, .titlePage {font-family: "embeddedHeading", sans-serif;}
 .titlePage, .titlePage h1, .titlePage h2, .titlePage div img {text-align: center}
+.title_img_wrapper { margin-bottom: 1em }
 nav ol li {list-style-type: none; margin-bottom: 1ex}
 nav ol li a {text-decoration: none}
 
@@ -60,6 +61,7 @@ nav ol li a {text-decoration: none}
     font-weight: bold;
 }
 
+.add {font-style: italic}
 .bd {font-weight: bold}
 .bk {font-style: italic}
 .dc {}
@@ -71,7 +73,7 @@ nav ol li a {text-decoration: none}
 .fv {}
 .it {font-style: italic}
 .k {font-weight: bold; font-style: italic}
-.nd {font-weight: bold}
+.nd { text-transform: uppercase; font-size: smaller}
 .ord {font-size: small; vertical-align: top}
 .pn {}
 .qac {font-style: italic; font-weight: bold}

@@ -12,6 +12,7 @@
         <item id="titlePage" href="XHTML/title.xhtml" media-type="application/xhtml+xml"/>
         <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <item id="css" href="CSS/styles.css" media-type="text/css" />
+        %custom_css%
         %book_manifest_items%
     </manifest>
     <spine>

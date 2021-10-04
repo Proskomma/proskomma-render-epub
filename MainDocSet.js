@@ -102,6 +102,13 @@ const addActions = (dsInstance) => {
             stylesTemplate = stylesTemplate.replace(/%left%/g, renderer.config.textDirection === 'rtl' ? 'right' : 'left');
             stylesTemplate = stylesTemplate.replace(/%right%/g, renderer.config.textDirection === 'rtl' ? 'left' : 'right');
             renderer.zip.file("OEBPS/CSS/styles.css", stylesTemplate);
+            if (dsInstance.config.customCSS) {
+                const customStyles = fse.readFileSync(path.resolve(dsInstance.config.configRoot, dsInstance.config.customCSS), 'utf8');
+                renderer.zip.file("OEBPS/CSS/custom.css", customStyles);
+                renderer.customLink = `<link type="text/css" rel="stylesheet" href="%css_path%/custom.css" />\n`;
+            } else {
+                renderer.customLink = '';
+            }
             const coverImagePath = dsInstance.config.coverImage ?
                 path.resolve(dsInstance.config.configRoot, dsInstance.config.coverImage) :
                 path.resolve(dsInstance.config.codeRoot, 'resources/cover.png');
@@ -146,6 +153,7 @@ const addActions = (dsInstance) => {
             opf = opf.replace(/%timestamp%/g, new Date().toISOString().replace(/\.\d+Z/g, "Z"));
             opf = opf.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);
             opf = opf.replace(/%coverImageMimetype%/g, renderer.config.coverImageSuffix === "png" ? "image/png" : "image/jpeg");
+            opf = opf.replace(/%custom_css%/g, renderer.customLink ? `<item id="customCss" href="CSS/custom.css" media-type="text/css" />` : '');
             let spineContent = renderer.usedDocuments.map(b => `<itemref idref="body_${b}" />\n`).join("");
             if (renderer.config.bookSources.includes("GLO")) {
                 spineContent = spineContent.concat(`<itemref idref="body_glossary_notes" linear="no" />\n`);
@@ -168,11 +176,15 @@ const addActions = (dsInstance) => {
             title = title.replace(/%copyright%/g, renderer.config.i18n.copyright);
             title = title.replace(/%coverAlt%/g, renderer.config.i18n.coverAlt);
             title = title.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);
-            title = title.replace(/%pubIds%/g, renderer.config.pubIds ? renderer.config.pubIds.map(p => '<p>' + p + '</p>\n').join("") : '');
+            title = title.replace(/%pubIds%/g, renderer.config.pubIds ? renderer.config.pubIds.map(p => '<p class="pub_id">' + p + '</p>\n').join("") : '');
+            title = title.replace(/%custom_style%/g, renderer.customLink);
+            title = title.replace(/%css_path%/g, '../CSS');
             renderer.zip.file("OEBPS/XHTML/title.xhtml", title);
             let toc = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/toc.xhtml'), 'utf8');
             toc = toc.replace(/%contentLinks%/g, nestedToc(renderer.config.structure));
-            toc = toc.replace(/%toc_books%/g, renderer.config.i18n.tocBooks)
+            toc = toc.replace(/%toc_books%/g, renderer.config.i18n.tocBooks);
+            toc = toc.replace(/%custom_style%/g, renderer.customLink);
+            toc = toc.replace(/%css_path%/g, 'CSS');
             renderer.zip.file("OEBPS/toc.xhtml", toc);
             renderer.zip.generateNodeStream({type: "nodebuffer", streamFiles: true})
                 .pipe(fse.createWriteStream(renderer.config.outputPath));

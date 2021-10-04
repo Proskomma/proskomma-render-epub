@@ -60,6 +60,7 @@ const addActions = (dInstance) => {
             dInstance.head = [
                 '<meta charset=\"utf-8\"/>\n',
                 `<link type="text/css" rel="stylesheet" href="${cssPath}" />\n`,
+                renderer.config.customCSS ? `<link type="text/css" rel="stylesheet" href="../../CSS/custom.css" />\n` : '',
                 `<title>${context.document.headers.h}</title>`,
             ];
             dInstance.body = [];
