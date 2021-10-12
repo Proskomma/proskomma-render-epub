@@ -126,7 +126,7 @@ const addActions = (dInstance) => {
                         `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">\n<head>\n${renderer.head.join("")}\n</head>\n`,
                         '<body id="top">\n',
                         `<header>\n${bodyHead}\n</header>\n`,
-                        `<section epub:type="endnotes">\n`,
+                        `<section>\n`,
                         `<h1 class="mt">${renderer.config.i18n.glossary}</h1>\n`,
                         renderer.config.glossaryAsides
                             .sort((a, b) => {
