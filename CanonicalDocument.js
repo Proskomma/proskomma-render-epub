@@ -132,7 +132,7 @@ const addActions = (dInstance) => {
     // add footnote to lookup (apparently handling multi-block footnotes?)
     dInstance.addAction(
         'endBlock',
-        context => context.sequenceStack[0].type === "footnote",
+        context => context.sequenceStack[0].type === "footnote" || context.sequenceStack[0].type === "xref",
         renderer => {
             const footnoteKey = renderer.nextFootnote.toString();
             if (!(footnoteKey in dInstance.footnotes)) {
@@ -287,7 +287,7 @@ const addActions = (dInstance) => {
         // Add footnote link, then process the footnote sequence
         dInstance.addAction(
             'inlineGraft',
-            (context, data) => data.subType === "footnote",
+            (context, data) => data.subType === "footnote" || data.subType === "xref",
             (renderer, context, data) => {
                 renderer.appendToTopStackRow(`<a epub:type="noteref" id="footnote_anchor_${renderer.nextFootnote}" href="#footnote_${renderer.nextFootnote}" class="footnote_anchor"><sup>${renderer.nextFootnote}</sup></a>`);
                 renderer.renderSequenceId(data.payload);
@@ -313,20 +313,10 @@ const addActions = (dInstance) => {
                         `<section epub:type="bodymatter">\n`,
                         renderer.body.join(""),
                         `\n</section>\n`,
-                        /*
-                        Object.keys(renderer.footnotes).length > 0 ?
-                            `<section epub:type="footnotes">\n<h2 class="notes_title">${renderer.config.i18n.notes}</h2>\n` :
-                            "",
-                         */
                         Object.entries(renderer.footnotes)
                             .map(fe =>
                                 `<aside epub:type="footnote" id="footnote_${fe[0]}" class="footnote_number"><p>${fe[1].join("")}</p></aside>\n`)
                             .join(""),
-                        /*
-                        Object.keys(renderer.footnotes).length > 0 ?
-                            `</section>\n` :
-                            "",
-                         */
                         '</body>\n</html>\n'
                     ].join("")
                 );

@@ -19,6 +19,6 @@
   "dependencies": {
     "fs-extra": "^10.0.0",
     "jszip": "^3.7.0",
-    "proskomma-render": "^0.5.4"
+    "proskomma-render": "^0.5.5"
   }
 }

@@ -59,7 +59,15 @@ const addActions = (dsInstance) => {
             }
             renderer.bookTitles = {};
             renderer.usedDocuments = flattenedStructure(renderer.config.structure)
-                .map(e => e[0] === 'bookCode' ? e[1] : renderer.context.docSet.peripherals[e[1]]);
+                .map(e => {
+                    if (e[0] === 'bookCode') {
+                        return e[1];
+                    } else if (e[0] === 'image') {
+                        return ['image', e[1], e[2]];
+                    } else {
+                        return renderer.context.docSet.peripherals[e[1]];
+                    }
+                });
             renderer.zip = new JSZip();
             renderer.zip.file("mimetype", "application/epub+zip");
             renderer.zip.file("META-INF/container.xml", fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/container.xml')));
@@ -125,14 +133,23 @@ const addActions = (dsInstance) => {
                 level = level || 2;
                 let ret = [];
                 for (const record of records) {
+                    if (record[0] === 'image') {
+                        continue;
+                    }
                     if (record[0] === 'section') {
                         ret.push(`<li>\n<span class="toc_level${level}">${renderer.config.i18n[record[1]] || '???'}</span>\n<ol>\n${nestedToc(record[2], level + 1)}</ol>\n</li>`);
                     } else if (record[0] === 'periph') {
                         const pName = renderer.context.docSet.peripherals[record[1]];
+                        if (!(pName in renderer.bookTitles)) {
+                            throw new Error(`bookTitle '${pName}' not found for peripheral '${record[1]}'`);
+                        }
                         ret.push(`<li class="toc_periph"><a href="XHTML/${pName}/${pName}.xhtml">${renderer.bookTitles[pName][2]}</a></li>`);
                     } else if (record[1] === 'GLO') {
                         ret.push(`<li><a href="XHTML/GLO.xhtml">${renderer.config.i18n.glossary}</a></li>\n`);
                     } else {
+                        if (!(record[1] in renderer.bookTitles)) {
+                            throw new Error(`bookTitle '${record[1]}' not found for book'`);
+                        }
                         ret.push(`<li><a href="XHTML/${record[1]}/${record[1]}.xhtml">${renderer.bookTitles[record[1]][2]}</a></li>`);
                     }
                 }
@@ -154,7 +171,14 @@ const addActions = (dsInstance) => {
             opf = opf.replace(/%coverImageSuffix%/g, renderer.config.coverImageSuffix);
             opf = opf.replace(/%coverImageMimetype%/g, renderer.config.coverImageSuffix === "png" ? "image/png" : "image/jpeg");
             opf = opf.replace(/%custom_css%/g, renderer.customLink ? `<item id="customCss" href="CSS/custom.css" media-type="text/css" />` : '');
-            let spineContent = renderer.usedDocuments.map(b => `<itemref idref="body_${b}" />\n`).join("");
+            let spineContent = renderer.usedDocuments
+                .map(b => {
+                    if (typeof b === 'string') {
+                        return `<itemref idref="body_${b}" />\n`;
+                    } else {
+                        return `<itemref idref="spineImg_${b[2]}" />\n`
+                    }
+                }).join("");
             if (renderer.config.bookSources.includes("GLO")) {
                 spineContent = spineContent.concat(`<itemref idref="body_glossary_notes" linear="no" />\n`);
             }
@@ -162,7 +186,20 @@ const addActions = (dsInstance) => {
             let manifestContent = [
                 ...renderer.usedDocuments
                     .filter(d => d !== 'GLO')
-                    .map(b => `<item id="body_${b}" href="XHTML/${b}/${b}.xhtml" media-type="application/xhtml+xml" />`),
+                    .map(b => {
+                        if (typeof b === 'string') {
+                            return `<item id="body_${b}" href="XHTML/${b}/${b}.xhtml" media-type="application/xhtml+xml" />`;
+                        } else {
+                            const img = fse.readFileSync(path.resolve(renderer.config.configRoot, b[1]));
+                            renderer.zip.file(`OEBPS/IMG/${b[1]}`, img);
+                            let spineImg = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/img.xhtml'), 'utf8');
+                            spineImg = spineImg.replace(/%imgPage%/g, b[2]);
+                            spineImg = spineImg.replace(/%filename%/g, b[1]);
+                            spineImg = spineImg.replace(/%imgAlt%/g, b[2]);
+                            renderer.zip.file(`OEBPS/XHTML/img_${b[2]}.xhtml`, spineImg);
+                            return `<item id="spineImg_${b[2]}" href="XHTML/img_${b[2]}.xhtml" media-type="application/xhtml+xml" />\n<item id="img_${b[2]}" href="IMG/${b[1]}" media-type="image/${b[1].split('.')[1]}" />`
+                        }
+                    }),
                 ...renderer.config.fontManifestEntries
             ].join("");
             if (renderer.config.bookSources.includes("GLO")) {
