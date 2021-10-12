@@ -208,7 +208,20 @@ const addActions = (dsInstance) => {
             }
             opf = opf.replace(/%book_manifest_items%/g, manifestContent);
             renderer.zip.file("OEBPS/content.opf", opf);
-            let title = fse.readFileSync(path.resolve(renderer.config.codeRoot, 'resources/title.xhtml'), 'utf8');
+            let title = fse.readFileSync(
+                    renderer.config.titleTemplate ?
+                        path.resolve(
+                            renderer.config.configRoot,
+                            renderer.config.titleTemplate,
+                        )
+                        :
+                        path.resolve(
+                            renderer.config.codeRoot,
+                            'resources/title.xhtml',
+                        ),
+                    'utf8',
+                )
+            ;
             title = title.replace(/%titlePage%/g, renderer.config.i18n.titlePage);
             title = title.replace(/%copyright%/g, renderer.config.i18n.copyright);
             title = title.replace(/%coverAlt%/g, renderer.config.i18n.coverAlt);

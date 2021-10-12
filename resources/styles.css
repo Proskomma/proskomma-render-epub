@@ -8,7 +8,9 @@ hr {margin-top: 2ex}
 
 nav, .titlePage {font-family: "embeddedHeading", sans-serif;}
 .titlePage, .titlePage h1, .titlePage h2, .titlePage div img {text-align: center}
-.title_img_wrapper { margin-bottom: 1em }
+.title_title { font-size: x-large }
+.title_copyright { font-size: medium }
+.title_img_wrapper { padding-bottom: 2em }
 nav ol li {list-style-type: none; margin-bottom: 1ex}
 nav ol li a {text-decoration: none}
 
