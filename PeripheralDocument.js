@@ -200,11 +200,15 @@ const addActions = (dInstance) => {
         context => context.sequenceStack[0].type === "main",
         (renderer, context) => {
             let bodyHead = renderer.bodyHead.join("");
+            let textDirection = renderer.config.textDirection || 'ltr';
+            if (renderer.config.reversedPeriphs.includes(context.document.headers.bookCode)) {
+                textDirection = textDirection === 'ltr' ? 'rtl' : 'ltr';
+            }
             renderer.docSetModel.zip
                 .file(
                     `OEBPS/XHTML/${context.document.headers.bookCode}/${context.document.headers.bookCode}.xhtml`,
                     [
-                        `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">\n<head>\n${renderer.head.join("")}\n</head>\n`,
+                        `<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" dir="${textDirection}">\n<head>\n${renderer.head.join("")}\n</head>\n`,
                         '<body id="top">\n',
                         `<header>\n${bodyHead}\n</header>\n`,
                         `<section epub:type="bodymatter">\n`,

@@ -68,6 +68,9 @@ const addActions = (dsInstance) => {
                         return renderer.context.docSet.peripherals[e[1]];
                     }
                 });
+            renderer.config.reversedPeriphs = flattenedStructure(renderer.config.structure)
+                .filter(e => e[0] === 'periph' && e[2] && e[2].includes('reverseDirection'))
+                .map(e => renderer.context.docSet.peripherals[e[1]]);
             renderer.zip = new JSZip();
             renderer.zip.file("mimetype", "application/epub+zip");
             renderer.zip.file("META-INF/container.xml", fse.readFileSync(path.resolve(dsInstance.config.codeRoot, 'resources/container.xml')));
@@ -173,11 +176,13 @@ const addActions = (dsInstance) => {
             opf = opf.replace(/%custom_css%/g, renderer.customLink ? `<item id="customCss" href="CSS/custom.css" media-type="text/css" />` : '');
             let spineContent = renderer.usedDocuments
                 .map(b => {
+                    if (b === undefined || b === null) {
+                        throw new Error("Undefined or null value in usedDocuments when building spine content");
+                    }
                     if (typeof b === 'string') {
                         return `<itemref idref="body_${b}" />\n`;
-                    } else {
-                        return `<itemref idref="spineImg_${b[2]}" />\n`
                     }
+                    return `<itemref idref="spineImg_${b[2]}" />\n`
                 }).join("");
             if (renderer.config.bookSources.includes("GLO")) {
                 spineContent = spineContent.concat(`<itemref idref="body_glossary_notes" linear="no" />\n`);
